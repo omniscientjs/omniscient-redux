@@ -31,26 +31,34 @@ function counter (state = 0, action) {
 // init redux
 const redux = createRedux({ counter });
 
-const Counter = component('Counter', ({ counterState, dispatch }) => {
-  // helper to create the actions object, so `actions.counterAdd()` is enough,
-  // instead of needing to do `dispatch(Actions.counterAdd())`
-  const actions = bindActionCreators(Actions, dispatch);
-  
-  return button({ onClick: actions.counterAdd },
-                `clicks: ${counterState}`)
-});
+// function that creates a component wrapped in a connector
+// that is rendered with the selected reducer state applied
+// (Actions could be probably be a param to `smartComponent` as well)
+const smartComponent =
+        (stateSelectorFn, ComponentToConnect) => component('ComponentWithState', () =>
+                                                           Connector({ select: stateSelectorFn },
+                                                                     (stateAndDispatch) => {
+                                                                       // helper to create the actions object
+                                                                       // so `actions.counterAdd()` is enough
+                                                                       // instead of needing to do `dispatch(Actions.counterAdd())`
+                                                                       const actions = bindActionCreators(Actions, stateAndDispatch.dispatch);
+                                                                       return ComponentToConnect(stateAndDispatch, { actions });
+                                                                     }));
 
-// function to pick the state the counter component is interested in,
-// it will be passed the `state` from the `counter` reducer, as `counterState`
-const counterStateSelector = state => ({ counterState: state.counter });
+// the counter component that accesses the state of our reducer
+// by providing a function that denotes what it wants to be passed
+const Counter = smartComponent((state) => ({ counterState: state.counter }),
+                               component('Counter', ({ counterState }, { actions }) =>
+                                         div({},
+                                             button({ onClick: actions.counterAdd },
+                                                    `clicks: ${counterState}`))));
+
+const SomeOuterComponent = component('SomeOuterComponent', () =>
+                                     div({},
+                                         span({}, "OuterComponent:"),
+                                         Counter()));
 
 // a provider component to expose redux on the context
-//
-// a function (?) as a child to the provider, returning a connector that selects the state for the counter
-//
-// another function as the child of connector that receives the state chosen by counterStateSelector and renders the counter
 export default component('App', () => {
-  return Provider({ redux: redux },
-                  () => Connector({ select: counterStateSelector },
-                                  (stateAndDispatch) => div({},
-                                                            Counter(stateAndDispatch))))});
+  return Provider({ redux: redux }, () => SomeOuterComponent())
+});
