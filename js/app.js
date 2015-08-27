@@ -35,28 +35,28 @@ const redux = createRedux({ counter });
 // that is rendered with the selected reducer state applied
 // (Actions could be probably be a param to `smartComponent` as well)
 const smartComponent =
-        (stateSelectorFn, ComponentToConnect) => component('ComponentWithState', () =>
-                                                           Connector({ select: stateSelectorFn },
-                                                                     (stateAndDispatch) => {
-                                                                       // helper to create the actions object
-                                                                       // so `actions.counterAdd()` is enough
-                                                                       // instead of needing to do `dispatch(Actions.counterAdd())`
-                                                                       const actions = bindActionCreators(Actions, stateAndDispatch.dispatch);
-                                                                       return ComponentToConnect(stateAndDispatch, { actions });
-                                                                     }));
+  (stateSelectorFn, ComponentToConnect) => component('ComponentWithState', () =>
+    Connector({ select: stateSelectorFn },
+      (stateAndDispatch) => {
+        // helper to create the actions object
+        // so `actions.counterAdd()` is enough
+        // instead of needing to do `dispatch(Actions.counterAdd())`
+        const actions = bindActionCreators(Actions, stateAndDispatch.dispatch);
+        return ComponentToConnect(stateAndDispatch, { actions });
+      }));
 
 // the counter component that accesses the state of our reducer
 // by providing a function that denotes what it wants to be passed
 const Counter = smartComponent((state) => ({ counterState: state.counter }),
-                               component('Counter', ({ counterState }, { actions }) =>
-                                         div({},
-                                             button({ onClick: actions.counterAdd },
-                                                    `clicks: ${counterState}`))));
+  component('Counter', ({ counterState }, { actions }) =>
+    div({},
+      button({ onClick: actions.counterAdd },
+        `clicks: ${counterState}`))));
 
 const SomeOuterComponent = component('SomeOuterComponent', () =>
-                                     div({},
-                                         span({}, "OuterComponent:"),
-                                         Counter()));
+  div({},
+    span({}, "OuterComponent:"),
+    Counter()));
 
 // a provider component to expose redux on the context
 export default component('App', () => {
