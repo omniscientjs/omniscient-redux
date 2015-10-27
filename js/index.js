@@ -1,9 +1,9 @@
 // import 'babel/polyfill';
-import React from 'react';
+import ReactDOM from 'react-dom';
 
 import App from './app';
 import '../less/index.less';
 
 const el = document.querySelector('#app');
-const render = () => React.render(App(), el);
+const render = () => ReactDOM.render(App(), el);
 render();

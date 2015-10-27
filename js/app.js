@@ -1,21 +1,21 @@
-import component from 'omniscient';
+import omniscient from 'omniscient';
+const component = omniscient.withDefaults({ isIgnorable: (_, key) => key == 'dispatch' });
 component.debug();
 
-import {DOM} from 'react/addons';
-let { div, span, button } = DOM;
+import { DOM } from 'react';
+const { div, span, button } = DOM;
 
 import React from 'react';
-import { createRedux, bindActionCreators } from 'redux';
-import * as ReduxReact from 'redux/react';
+import { createStore, combineReducers } from 'redux';
+import * as ReactRedux from 'react-redux';
+const { connect } = ReactRedux;
 
 // just because we're not using jsx
-const Connector = React.createFactory(ReduxReact.Connector),
-      Provider = React.createFactory(ReduxReact.Provider);
+const Provider = React.createFactory(ReactRedux.Provider);
 
-// a type of action we can dispatch
+// a type of action we can dispatch and a function that
+// returns an action to pass to dispatch(..)
 const ActionTypes = { COUNTER_ADD: 'COUNTER_ADD' };
-
-// a function that returns an action with a type to pass to dispatch(..)
 const Actions = { counterAdd: () => ({ type: ActionTypes.COUNTER_ADD }) };
 
 // a reducer/store to operate on actions
@@ -28,37 +28,28 @@ function counter (state = 0, action) {
   }
 }
 
-// init redux
-const redux = createRedux({ counter });
+// combine multiple reducers to create the store
+const store = createStore(combineReducers({ counter }));
 
-// function that creates a component wrapped in a connector
-// that is rendered with the selected reducer state applied
-// (Actions could be probably be a param to `smartComponent` as well)
-const smartComponent =
-  (stateSelectorFn, ComponentToConnect) => component('ComponentWithState', () =>
-    Connector({ select: stateSelectorFn },
-      (stateAndDispatch) => {
-        // helper to create the actions object
-        // so `actions.counterAdd()` is enough
-        // instead of needing to do `dispatch(Actions.counterAdd())`
-        const actions = bindActionCreators(Actions, stateAndDispatch.dispatch);
-        return ComponentToConnect(stateAndDispatch, { actions });
-      }));
+// function that creates a decorated component that is rendered
+// with the selected reducer state and dispatch function applied
+const smartComponent = (select, Component) => component.withDecorator(connect(select), Component);
 
-// the counter component that accesses the state of our reducer
-// by providing a function that denotes what it wants to be passed
-const Counter = smartComponent((state) => ({ counterState: state.counter }),
-  component('Counter', ({ counterState }, { actions }) =>
+// the component accesses the state of our reducer/store by
+// providing a function that denotes what it wants to be passed
+const Counter =
+  smartComponent(
+    (state) => ({ counterState: state.counter }),
+    component('Counter', ({ counterState, dispatch }) =>
+      div({},
+        button({ onClick: () => dispatch(Actions.counterAdd()) },
+          `clicks: ${counterState}`))));
+
+const SomeOuterComponent =
+  component('SomeOuterComponent', () =>
     div({},
-      button({ onClick: actions.counterAdd },
-        `clicks: ${counterState}`))));
+      span({}, "OuterComponent:"),
+        Counter()));
 
-const SomeOuterComponent = component('SomeOuterComponent', () =>
-  div({},
-    span({}, "OuterComponent:"),
-    Counter()));
-
-// a provider component to expose redux on the context
-export default component('App', () => {
-  return Provider({ redux: redux }, () => SomeOuterComponent())
-});
+export default component('App', () =>
+  Provider({ store }, SomeOuterComponent()));
