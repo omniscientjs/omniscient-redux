@@ -7,8 +7,8 @@ const { div, span, button, a, ul, li } = DOM;
 import Actions from './actions';
 
 const Menu = smartComponent(
-  (state) => state,
   component('Menu', ({ dispatch }) =>
+  (state) => ({}),
     div({},
       ul({},
         li({}, a({ href: "#", onClick: () => dispatch(Actions.updatePath("/")) }, "Index route")),
