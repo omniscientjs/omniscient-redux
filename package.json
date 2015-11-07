@@ -4,11 +4,14 @@
   "description": "Example showing how to use redux with omniscient.",
   "main": "hot-reload-server.js",
   "dependencies": {
+    "history": "^1.13.0",
     "omniscient": "omniscientjs/omniscient#master",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",
-    "redux": "^3.0.4"
+    "react-router": "^1.0.0-rc4",
+    "redux": "^3.0.4",
+    "redux-simple-router": "0.0.7"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
