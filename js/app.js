@@ -20,7 +20,7 @@ const Counter = smartComponent(
   (state) => ({ counterState: state.counter }),
   component('Counter', ({ counterState, dispatch }) =>
     div({},
-      button({ onClick: () => dispatch(Actions.counterAdd()) }, `clicks: ${counterState}`),
+      button({ onClick: () => dispatch(Actions.counterAdd()) }, `clicks: ${counterState}`)
     )));
 
 export const CounterComponent =
