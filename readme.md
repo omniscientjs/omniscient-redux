@@ -2,7 +2,7 @@
 
 https://omniscientjs.github.io/omniscient-redux/
 
-![omniscient-redux](https://cdn.rawgit.com/omniscientjs/omniscient-redux/master/omniscient-redux.gif)
+![demo](https://cdn.rawgit.com/omniscientjs/omniscient-redux/master/omniscient-redux.gif)
 
 ```sh
 npm i
