@@ -5,7 +5,8 @@
   "main": "hot-reload-server.js",
   "dependencies": {
     "history": "^1.13.0",
-    "omniscient": "omniscientjs/omniscient#master",
+    "less": "^2.5.3",
+    "omniscient": "omniscientjs/omniscient#expose-type-on-creator",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-redux": "^4.0.0",

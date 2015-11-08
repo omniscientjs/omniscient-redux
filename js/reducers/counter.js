@@ -1,4 +1,4 @@
-import { COUNTER_ADD } from './action-types';
+import { COUNTER_ADD } from '../actions/action-types';
 
 // a reducer/store to operate on actions
 function counter (state = 0, action) {
