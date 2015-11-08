@@ -13,3 +13,9 @@ Run
 ```sh
 npm run watch
 ```
+
+Build
+
+```sh
+npm run build
+```

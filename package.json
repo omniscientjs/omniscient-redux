@@ -5,7 +5,6 @@
   "main": "hot-reload-server.js",
   "dependencies": {
     "history": "^1.13.0",
-    "less": "^2.5.3",
     "omniscient": "omniscientjs/omniscient#expose-type-on-creator",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
@@ -20,15 +19,17 @@
     "babel-core": "^5.8.3",
     "babel-loader": "^5.3.2",
     "css-loader": "^0.21.0",
-    "less": "^2.5.1",
+    "less": "^2.5.3",
     "less-loader": "^2.2.0",
     "react-hot-loader": "^1.2.8",
+    "redux-devtools": "^2.1.5",
     "style-loader": "^0.13.0",
     "webpack": "^1.10.2",
     "webpack-dev-server": "^1.10.1"
   },
   "scripts": {
-    "start": "node hot-reload-server.js"
+    "watch": "node hot-reload-server.js",
+    "build": "PROD=true webpack -p"
   },
   "repository": {
     "type": "git",
