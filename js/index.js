@@ -4,8 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // redux stuff
-import { compose, createStore, combineReducers } from 'redux';
+import { applyMiddleware, compose, createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
 // redux debug
 import { devTools, persistState } from 'redux-devtools';
@@ -21,7 +22,11 @@ import counterReducer from './reducers/counter';
 
 // combine reducers to a store,
 // adds routing to state
-const debugStore = DEBUG ? compose(devTools()) : (_) => _;
+const debugStore = compose(
+  applyMiddleware(thunk),
+  DEBUG
+    ? devTools()
+    : (_) => _);
 const store = debugStore(createStore)(combineReducers({
   counter: counterReducer,
   routing: routeReducer

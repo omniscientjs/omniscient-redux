@@ -7,7 +7,7 @@ import Clicker from './clicker';
 const Counter =
   component('Counter', () =>
     div({},
-      span({}, "Counter:"),
+      span({}, "Clicks:"),
       Clicker()));
 
 export default Counter;
